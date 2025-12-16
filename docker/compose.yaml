@@ -1,0 +1,23 @@
+services:
+  vision:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: dum-e-vision
+    ports:
+      - "8000:8000"
+    environment:
+      - DEVICE=cuda
+      - GDINO_CONFIG=/models/gdino/config.py
+      - GDINO_CKPT=/models/gdino/model.pth
+      - TORCH_CUDA_ARCH_LIST=8.9
+      - FORCE_CUDA=1
+    volumes:
+      - ../models:/models:ro
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
